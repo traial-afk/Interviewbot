@@ -13,3 +13,6 @@ def generate_livekit_token(identity: str, room: str) -> str:
     })
     token.ttl = datetime.timedelta(hours=1)  # Token valid for 1 hour
     return token.to_jwt()
+import livekit
+print(livekit.__file__)
+
