@@ -1,4 +1,4 @@
-from livekit import AccessToken
+from livekit.accesstoken import AccessToken
 import os
 import datetime
 
