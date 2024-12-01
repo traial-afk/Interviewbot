@@ -12,6 +12,11 @@ OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 SUPABASE_URL = os.getenv("SUPABASE_URL")
 SUPABASE_API_KEY = os.getenv("SUPABASE_API_KEY")
 
+@app.get("/")
+def root():
+    return {"message": "Welcome to the Real-Time Interview Assistant!"}
+
+
 @app.get("/test-env")
 def test_env():
     return {
