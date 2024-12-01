@@ -1,9 +1,11 @@
 from fastapi import FastAPI
+import os
+from routes.livekit import livekit_routes
 
 app = FastAPI()
 
-import os
-from routes.livekit import livekit_routes
+app.include_router(livekit_routes)
+
 
 LIVEKIT_URL = os.getenv("LIVEKIT_URL")
 LIVEKIT_API_KEY = os.getenv("LIVEKIT_API_KEY")
@@ -16,6 +18,12 @@ SUPABASE_API_KEY = os.getenv("SUPABASE_API_KEY")
 @app.get("/")
 def root():
     return {"message": "Welcome to the Real-Time Interview Assistant!"}
+
+@app.get("/livekit/token")
+def get_livekit_token(identity: str, room: str):
+    token = generate_livekit_token(identity, room)
+    return {"token": token}
+
 
 
 @app.get("/test-env")
