@@ -3,6 +3,7 @@ from fastapi import FastAPI
 app = FastAPI()
 
 import os
+from routes.livekit import livekit_routes
 
 LIVEKIT_URL = os.getenv("LIVEKIT_URL")
 LIVEKIT_API_KEY = os.getenv("LIVEKIT_API_KEY")
