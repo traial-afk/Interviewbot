@@ -1,6 +1,7 @@
 from fastapi import FastAPI
 import os
 from routes.livekit import livekit_routes
+from routes.deepgram import deepgram_routes
 
 app = FastAPI()
 
