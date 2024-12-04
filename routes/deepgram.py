@@ -52,7 +52,7 @@ async def transcribe_audio(audio_url: str) -> dict:
         }
 
 # Route to test transcription
-@deepgram_routes.get("/transcribe")
+@deepgram_router.get("/transcribe")
 async def get_transcription(audio_url: str):
     """
     API endpoint to trigger audio transcription
@@ -67,10 +67,10 @@ async def get_transcription(audio_url: str):
     return result
 
 # Optional: Simple health check route
-@deepgram_routes.get("/health")
+@deepgram_router.get("/health")
 async def health_check():
     """
-    Health check endpoint for Deepgram routes
+    Health check endpoint for Deepgram router
     """
     return {
         "status": "ok",
