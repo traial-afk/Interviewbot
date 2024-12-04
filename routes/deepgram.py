@@ -4,7 +4,7 @@ import os
 import asyncio
 
 # Create the APIRouter
-deepgram_routes = APIRouter()
+deepgram_router = APIRouter()
 
 async def transcribe_audio(audio_url: str) -> dict:
     """
