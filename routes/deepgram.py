@@ -1,20 +1,78 @@
-from fastapi import APIRouter, WebSocket
+from fastapi import APIRouter
 from deepgram import Deepgram
 import os
+import asyncio
 
-router = APIRouter()
+# Create the APIRouter
+deepgram_routes = APIRouter()
 
-# Initialize Deepgram client
-DEEPGRAM_API_KEY = os.getenv("DEEPGRAM_API_KEY")
-deepgram_client = Deepgram(DEEPGRAM_API_KEY)
-
-@router.websocket("/ws/deepgram")
-async def deepgram_websocket(websocket: WebSocket):
-    await websocket.accept()
+async def transcribe_audio(audio_url: str) -> dict:
+    """
+    Asynchronous function to transcribe audio using Deepgram
+    
+    Args:
+        audio_url (str): URL of the audio file to transcribe
+    
+    Returns:
+        dict: Transcription results
+    """
     try:
-        while True:
-            data = await websocket.receive_bytes()
-            response = await deepgram_client.transcription.live(data)
-            await websocket.send_json(response)
+        # Get Deepgram API key from environment variable
+        deepgram_api_key = os.getenv("DEEPGRAM_API_KEY")
+        
+        if not deepgram_api_key:
+            raise ValueError("Deepgram API key not set")
+        
+        # Initialize Deepgram client
+        deepgram = Deepgram(deepgram_api_key)
+        
+        # Prepare source configuration
+        source = {
+            'url': audio_url
+        }
+        
+        # Configure transcription options
+        options = {
+            'punctuate': True,
+            'language': 'en-US'
+        }
+        
+        # Perform transcription
+        response = await deepgram.transcription.prerecorded.transcribe_url(source, options)
+        
+        return {
+            "status": "success",
+            "transcription": response['results']['channels'][0]['alternatives'][0]['transcript']
+        }
+    
     except Exception as e:
-        await websocket.close()
+        return {
+            "status": "error",
+            "message": str(e)
+        }
+
+# Route to test transcription
+@deepgram_routes.get("/transcribe")
+async def get_transcription(audio_url: str):
+    """
+    API endpoint to trigger audio transcription
+    
+    Args:
+        audio_url (str): URL of the audio file to transcribe
+    
+    Returns:
+        dict: Transcription results
+    """
+    result = await transcribe_audio(audio_url)
+    return result
+
+# Optional: Simple health check route
+@deepgram_routes.get("/health")
+async def health_check():
+    """
+    Health check endpoint for Deepgram routes
+    """
+    return {
+        "status": "ok",
+        "service": "Deepgram Transcription"
+    }
