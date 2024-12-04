@@ -1,5 +1,5 @@
 from fastapi import APIRouter
-from deepgram import DeepgramClient, SpeakOptions
+from deepgram import Deepgram, DeepgramClient, SpeakOptions
 import os
 import asyncio
 
