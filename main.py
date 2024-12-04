@@ -1,11 +1,12 @@
 from fastapi import FastAPI
 import os
 from routes.livekit import livekit_routes
-from routes.deepgram import deepgram_routes
+from app.routes.deepgram import router as deepgram_router
 
 app = FastAPI()
 
 app.include_router(livekit_routes)
+app.include_router(deepgram_router, prefix="/deepgram", tags=["Deepgram"])
 
 
 LIVEKIT_URL = os.getenv("LIVEKIT_URL")
